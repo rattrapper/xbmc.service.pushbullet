@@ -127,13 +127,18 @@ def getURLUserAgent(url):
 def playMedia(url,title='',thumb='',description='',playlist_type=xbmc.PLAYLIST_VIDEO):
     common.log('Play media: ' + url)
 
+    # start playing file immediately or add to current playlist
+    interrupt = common.getSetting('interrupt_media', False)
+
     li = xbmcgui.ListItem(label=title,label2=description,iconImage=thumb,thumbnailImage=thumb)
     li.setPath(url)
     li.setInfo('video',{'title':title,'tagline':description})
     pl = xbmc.PlayList(playlist_type)
-    pl.clear()
+    if interrupt:
+        pl.clear()
     pl.add(url,li)
-    xbmc.Player().play(pl)
+    if not mediaPlaying() or interrupt:
+        xbmc.Player().play(pl)
 
 def mediaPlaying(): #TODO: make sure we're checking for all media
     return StreamUtils.isPlaying()

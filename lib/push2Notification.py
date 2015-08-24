@@ -176,9 +176,7 @@ class Push2Notification():
         # Check if instant play is enabled for the media type and play
         if media_type in ('video','audio','image'):
             if common.getSetting('handling_{0}'.format(media_type),0) == 0:
-                if not pushhandler.mediaPlaying() or common.getSetting('interrupt_media',False):
-                    pushhandler.handlePush(message)
-                    return True
+                return pushhandler.handlePush(message)
 
         if common.getSetting('handling_{0}'.format(media_type),0) == 1:
             self.showNotificationFromMessage(message)
