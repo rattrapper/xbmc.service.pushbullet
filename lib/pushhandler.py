@@ -128,16 +128,16 @@ def playMedia(url,title='',thumb='',description='',playlist_type=xbmc.PLAYLIST_V
     common.log('Play media: ' + url)
 
     # start playing file immediately or add to current playlist
-    interrupt = common.getSetting('interrupt_media', False)
+    clear_playlist = common.getSetting('interrupt_media', False) or not mediaPlaying()
 
     li = xbmcgui.ListItem(label=title,label2=description,iconImage=thumb,thumbnailImage=thumb)
     li.setPath(url)
     li.setInfo('video',{'title':title,'tagline':description})
     pl = xbmc.PlayList(playlist_type)
-    if interrupt:
+    if clear_playlist:
         pl.clear()
     pl.add(url,li)
-    if not mediaPlaying() or interrupt:
+    if clear_playlist:
         xbmc.Player().play(pl)
 
 def mediaPlaying(): #TODO: make sure we're checking for all media
